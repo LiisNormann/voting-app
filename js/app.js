@@ -7,3 +7,9 @@ function myFunction() {
         x.className = "topnav";
     }
 }
+
+//replace homepage content with signUp content
+function replace_home() {
+    document.getElementById("homepage").style.display="none";
+    document.getElementById("signUp").style.display="block";
+}
