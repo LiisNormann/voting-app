@@ -13,3 +13,15 @@ function replace_home() {
     document.getElementById("homepage").style.display="none";
     document.getElementById("signUp").style.display="block";
 }
+
+//replace signup content with pollForm content
+function replace_signUp() {
+    document.getElementById("signUp").style.display="none";
+    document.getElementById("poll").style.display="block";
+}
+
+//initialize select element
+document.addEventListener('DOMContentLoaded', function() {
+    var elems = document.querySelectorAll('select');
+    var instances = M.FormSelect.init(elems, options);
+});
