@@ -20,8 +20,3 @@ function replace_signUp() {
     document.getElementById("poll").style.display="block";
 }
 
-//initialize select element
-document.addEventListener('DOMContentLoaded', function() {
-    var elems = document.querySelectorAll('select');
-    var instances = M.FormSelect.init(elems, options);
-});
