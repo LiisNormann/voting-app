@@ -53,7 +53,6 @@ class DB {
      * @param string $pass
      */
     public function __construct(string $host, string $name, string $user, string $pass = "") {
-        echo "andmebaasi ühenduse loomine";
         $this->host = $host;
         $this->name = $name;
         $this->user = $user;
