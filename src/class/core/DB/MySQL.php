@@ -32,8 +32,17 @@ class MySQL extends DB {
         mysqli_autocommit($this->db, false);
 
         $DB_LOG[] = "connect time: " . (microtime(true) - $t1);
+        $this->begin_transaction();
 
         return $this;
+    }
+
+    public function disconnect() : void {
+        if($this->isConnected()) {
+            $this->commit(false);
+            mysqli_close($this->db);
+            $this->connected = false;
+        }
     }
 
     /**
@@ -54,6 +63,66 @@ class MySQL extends DB {
         return $data;
     }
 
+    public function insert(string $table, array $insert) {
+        $sql = "INSERT INTO $table";
+
+        $i = $j = 0;
+        $into = "";
+        $values = " VALUES ";
+        foreach ($insert as $k => $v) {
+            if(is_array($v)) {
+                $j = 0;
+                $i == 0 ? ($comma2 = "") : ($comma2 = ", ");
+                $values .= $comma2;
+                foreach ($v as $k2 => $v2) {
+                    $j == 0 ? ($comma = "(") : ($comma = ", ");
+                    if($i == 0)
+                        $into .= $comma . $k2;
+
+                    $values .= $comma . $v2;
+                    $j++;
+                }
+                if($i == 0)
+                    $into .= ") ";
+
+                $values .= ")";
+            } else {
+                 $i == 0 ? ($comma = "(") : ($comma = ", ");
+                 $into .= $comma . $k;
+                 $values .= $comma . $v;
+            }
+            $i++;
+        }
+
+        if(!$j) {
+            $into .= ") ";
+            $values .= ")";
+        }
+        $sql .= $into . $values;
+
+        return $this->db_sql($sql);
+    }
+
+    public function update(string $table, array $set, string $where = "") {
+        $sql = "UPDATE $table SET ";
+        $i = 0;
+        foreach ($set as $k => $v) {
+            $i == 0 ? ($comma = "") : ($comma = ", ");
+            $sql .= $comma . $k . "=" . $v;
+            $i++;
+        }
+        $where = $where ? " WHERE $where" : "";
+        $sql .= $where;
+
+        return $this->db_sql($sql);
+    }
+
+    public function delete(string $table, string $where) {
+        $where = $where ? " WHERE $where" : "";
+
+        return $this->db_sql("DELETE FROM $table $where");
+    }
+
     public function db_sql(string $query) {
         global $DB_LOG;
 
@@ -69,5 +138,29 @@ class MySQL extends DB {
         $DB_LOG[] = sprintf("%s time: %s", $query, microtime(true) - $t1);
 
         return $result;
+    }
+
+    public function begin_transaction() : void {
+        $this->db_sql("START TRANSACTION");
+    }
+
+    public function commit(bool $startNew = false) : void {
+        if($this->isConnected()) {
+            mysqli_commit($this->db);
+            if($startNew)
+                $this->begin_transaction();
+        }
+    }
+
+    public function rollback(bool $startNew = false) : void {
+        if($this->isConnected()) {
+            mysqli_rollback($this->db);
+            if($startNew)
+                $this->begin_transaction();
+        }
+    }
+
+    public function last_id() {
+        return mysqli_insert_id($this->db);
     }
 }
