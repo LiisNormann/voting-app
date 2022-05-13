@@ -1,16 +1,16 @@
-<p>
+<div id="options">
+    <input name="person" type="hidden" value="{{$person}}" />
     <label>
-        <input name="agree" type="radio"/>
+        <input id="agree" value="poolt" name="position" type="radio"/>
         <span>Agree</span>
     </label>
-</p>
-<p>
+
     <label>
-        <input name="disagree" type="radio"/>
+        <input id="disagree" value="vastu" name="position" type="radio"/>
         <span>Disagree</span>
     </label>
-</p>
+</div>
 <br>
-<div>
+<div class="btn-margin">
     <button id="btn-vote" class="button" type="submit">Submit!</button>
 </div>

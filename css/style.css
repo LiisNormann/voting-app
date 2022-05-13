@@ -99,7 +99,22 @@ select {
 }
 
 /* POLL */
+#options {
+    display: inline;
+}
 
+#options span {
+    font-size: 25px;
+    color: black;
+}
+
+.btn-margin {
+    margin-top: 50px;
+}
+
+#poll-after p {
+    font-size: 20px;
+}
 
 /* NAVBAR */
 .logo a {
